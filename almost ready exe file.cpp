@@ -255,10 +255,8 @@ class AnalysisEngine:public country{
 				{
 					int hp23=0;
 					string hp23Country;
-					int c=countryCount;
 					int p23;
-					cout<<c;
-					while(i<234)
+					while(i<countryCount)
 					{	
 						p23=getpop23(i);
 						if(p23>hp23)
