@@ -24,7 +24,7 @@ class country{
 		string growth_rate;
 		string world_per;
    protected:
-		static int countryCount=0;
+		static int countryCount;
 		static vector<country> countries;
 	public:
 		country()
@@ -162,6 +162,8 @@ class country{
 			return countries[i].world_per;
 		}		
 };
+	 int country::countryCount=0;
+	 vector<country> country::countries;
 
 class DataMananger:public country{
 	private:
