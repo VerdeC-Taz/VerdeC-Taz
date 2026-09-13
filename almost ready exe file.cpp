@@ -24,8 +24,8 @@ class country{
 		string growth_rate;
 		string world_per;
    protected:
-		int countryCount=0;
-		vector<country> countries;
+		static int countryCount=0;
+		static vector<country> countries;
 	public:
 		country()
 		{
