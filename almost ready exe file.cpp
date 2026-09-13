@@ -233,9 +233,9 @@ class AnalysisEngine:public country{
 		void minMax()
 {	
 	int choice;
-	int  i=0;
+	
 	do{
-		
+		int  i=0;
 		cout<<"1. Country with the highest 2023 population. \n"
 			<<"2. Country with the lowest 2023 population. \n"
 			<<"3. Country with the highest population density. \n"
@@ -253,9 +253,9 @@ class AnalysisEngine:public country{
 		{
 			case 1:
 				{
-					int hp23=0;
+					long int hp23=0;
 					string hp23Country;
-					int p23;
+					long int p23;
 					while(i<countryCount)
 					{	
 						p23=getpop23(i);
