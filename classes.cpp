@@ -357,145 +357,115 @@ int searchEngine::countryindex(string country)
 }  	
 
 //statEngine
-	
-long double statEngine::findmean()
+long  double statEngine::findmean()
 {
 	long double mean;
-	long int total_density=0;
-	
-	for(int indx=0;indx<countryCount;indx++)
+	long int total=0;
+	for(int indx = 0; indx < countryCount ; indx++ )
 	{
-		total_density+=getdensity(indx);
+		total+=getdensity(indx);
 	}
-	mean=(long double)total_density/countryCount;
-	
+	mean = (long double)total/countryCount;
 	return mean;
 }
 
-long int statEngine::findmedian() 
-{    
-    vector<int> densities;
-    
-    for (int i = 0; i < countryCount; i++) 
+ int statEngine::findmedian()
+{
+	int median;
+	int i=0;
+	vector<int>densities;
+	
+	while(i<countryCount)
 	{
-        densities.push_back(getdensity(i));
-    }
-    
-    sort(densities.begin(), densities.end());
-    
-    if (countryCount%2 == 0)
-	{
-        return (densities[countryCount / 2 - 1] + densities[countryCount / 2]) / 2;
-    }
-	else
-	{
-    	return densities[countryCount / 2];
-    }
+		densities.push_back(getdensity(i));
+		i++;
+	}
+	sort(densities.begin(),densities.end());
+	
+    median=densities[countryCount/2];//finding median
+    return median;
 }
 
 long long int statEngine::findminimum()
 {
-	long long int minimum =getdensity(0);
-	
-	for(int index=0;index<countryCount;index++)
-	{
-		if(getdensity(index)<minimum)
-		{
-			minimum =getdensity(index);
-		}
+	long long int minimum =getdensity(0) ;
+	for(int index = 0 ; index < countryCount ; index++ ){
+		if(getdensity(index)<minimum){
+			minimum=getdensity(index);
+		};
 	}
 	return minimum;
 }
-
-long long int statEngine::findmaximum()
-{
-	long long int maximum =getdensity(0);
-	for(int i = 0; i< countryCount;i++ )
-	{
-		if(getdensity(i)>maximum)
-		{
-		maximum =getdensity(i);
-		}
+long long int statEngine::findmaximum(){
+	long long int maximum =getdensity(0) ;
+	for(int ind = 0; ind < countryCount ; ind++ ){
+		if(getdensity(ind) > maximum)
+		{maximum =getdensity(ind);
+		};
 	}
 	return maximum;
 }
-
-long long int statEngine::findrange()
-{
-	long int maximum=findmaximum();//obtaining maximum density from findmaximum function
-	long int minimum=findminimum();
-	long int range = maximum-minimum;
-	
+long long int statEngine::findrange(){
+	int maximum=findmaximum();//obtaining maximum density from findmaximum function
+	int minimum=findminimum();
+	int range = maximum-minimum;
 	return range;
 }
-
-double statEngine::findstdD()
-{
+double statEngine::findstdD(){
 	double stdD;
 	double variance;
 	double value=0.0;
 	double diff=0.0;
-	
 	double mean=findmean();
-	
-	for(int i=0;i<countryCount;i++)
-	{		
-	  	diff=getdensity(i)-mean;
+	for(int i=0;i<countryCount;i++){		
+	   diff	=getdensity(i)-mean;
 		value+=(pow(diff,2));		
-	}
-	variance=value/countryCount;
-	
+	}variance=value/countryCount;
 	stdD=sqrt(variance);
-	
 	return stdD;
 }
-
-void statEngine::densityStatistics()
-{	int input;
-	do{
+void statEngine::densityStatistics(){
+	enum Choice{ mean=1,median,maximum,minimum,range,stdD,all
+	};
+	int input;
+    cout<<endl;
+	cout<<"  ....Density Statistics.... "<<endl;
+	cout<<"1.Mean "<<endl;
+	cout<<"2.Median "<<endl;
+	cout<<"3.Maximum "<<endl;
+	cout<<"4.Minimum "<<endl;
+	cout<<"5.Range"<<endl;
+	cout<<"6.Standard Deviation"<<endl;
+	cout<<"7.Dsplay All Operations"<<endl;
+	cout<<endl;
+	cout<<"Choose an operation: ";
+	cin>>input;
+	cout<<endl;
+	switch(input){
+		case mean: cout<<"Mean: "<<findmean();
 		
-		enum Choice{ mean=1,median,maximum,minimum,range,stdD,all};
-	
-	
-		cout<<"\n  ....Density Statistics.... "<<endl;
-	
-		cout<<"1.Mean "<<endl;
-		cout<<"2.Median "<<endl;
-		cout<<"3.Maximum "<<endl;
-		cout<<"4.Minimum "<<endl;
-		cout<<"5.Range"<<endl;
-		cout<<"6.Standard Deviation"<<endl;
-		cout<<"7.Dsplay All Operations \n"<<endl;
-	
-		cout<<"Choose an operation: ";
-		cin>>input;
-	
-		switch(input)
-		{
-			case mean: cout<<"Mean: "<<findmean();
+		break;
 		
-			break;
+		case median: cout<<"Median: "<<findmedian();
 		
-			case median: cout<<"Median: "<<findmedian();
+		break;
 		
-			break;
+		case maximum: cout<<"Maximum: "<<findmaximum();
 		
-			case maximum: cout<<"Maximum: "<<findmaximum();
+		break;
 		
-			break;
+		case minimum: cout<<"Minimum: "<<findminimum();
 		
-			case minimum: cout<<"Minimum: "<<findminimum();
+		break;
+		case range: cout<<"Range: "<<findrange();
 		
-			break;
-			case range: cout<<"Range: "<<findrange();
+		break;
 		
-			break;
+		case stdD: cout<<"Standard Deviation: "<<findstdD();
 		
-			case stdD: cout<<"Standard Deviation: "<<findstdD();
-		
-			break;
-			case all: cout<<"   ...All Results..."<<endl;
-				  cout<<endl;
+		break;
+		case all: cout<<"   ...All Results..."<<endl;
+		        cout<<endl;
 		          cout<<"Mean: "<<findmean()<<endl;
 		          cout<<"Median: "<<findmedian()<<endl;
 		          cout<<"Maximum: "<<findmaximum()<<endl;
@@ -504,25 +474,12 @@ void statEngine::densityStatistics()
 		          cout<<"Standard Deviation: "<<findstdD();
 		          break;
 		         
-			default:
-				{
-					if(input==0)
-					{
-						cout<<"******* \n"
-							<<"  END \n"
-							<<"******* \n"<<endl;
-						break;
-					}
-					else
-					{
-					cout<<"Invalid Input!!! \n Retry...."<<endl;	
-					break;
-					}
-				}
-		}
-	}while(input!=0);
+		default:cout<<"Invalid Input!!! \n Retry...."<<endl;
+			densityStatistics();
+		
+		break;
+	}
 }
-	
 
 
 // analysisEngine
@@ -1292,7 +1249,9 @@ void populationSystem::DisplayMenu()
 				}
 			case 7:
 				{
+					cin.ignore();
 					stats.densityStatistics();
+					break;
 				}
 			case 10:
 				{
