@@ -230,6 +230,157 @@ vector<country> country::countries;
 	outfile.close();
 }
 
+// soryEngine
+
+// Option 1: 2023 population - descending
+void sortEngine::pop23_d(vector<int>& sorted)
+{
+    sort(sorted.begin(), sorted.end(),
+        [this](int a, int b)
+        {
+            return this->getpop23(a)
+                 > this->getpop23(b);
+        });
+}
+
+
+// Option 2: 1970 population - descending
+void sortEngine::pop70_d(vector<int>& sorted)
+{
+    sort(sorted.begin(), sorted.end(),
+        [this](int a, int b)
+        {
+            return this->getpop70(a)
+                 > this->getpop70(b);
+        });
+}
+
+
+// Option 3: Population density - descending
+void sortEngine::density_d(vector<int>& sorted)
+{
+    sort(sorted.begin(), sorted.end(),
+        [this ](int a,int b)
+        {
+            return this->getdensity(a)
+                 > this->getdensity(b);
+        });
+}
+
+
+// Option 4: Growth rate - ascending
+void sortEngine::growth_rate_a(vector<int>& sorted)
+{
+    sort(sorted.begin(), sorted.end(),
+        [this ](int a,int b)
+        {
+            return this->getgrowth_rate(a)
+                 < this->getgrowth_rate(b);
+        });
+}
+
+
+void sortEngine::sortCountries()
+{
+	// store country indices
+    vector<int> sorted;
+
+    for (int i = 0; i < countryCount;i++)
+    {
+        sorted.push_back(i);
+    }
+    
+    int choice;
+  do{
+
+    cout << "1. By 2023 population (Descending)" << endl;
+    cout << "2. By 1970 population (Descending)" << endl;
+    cout << "3. By population density (Descending)" << endl;
+    cout << "4. By growth rate (Ascending)" << endl;
+    cout << "5. Enter 0 to exit"<<endl;
+    
+    cin.clear();
+    cin.ignore();
+    
+    cout << "Enter choice: ";
+    cin >> choice;
+
+    
+    
+    switch (choice)
+    {
+        case 1:
+            pop23_d(sorted);
+            cout<<"*********************************************************** \n";
+            cout <<"\nSorted by: 2023 population (Descending)"<<endl;
+            cout <<"----------------------------------------------------------\n";
+            for (int i : sorted)
+            {
+                cout<<left<<setw(35)<<this->getCountry(i)<<" : "<<getpop23(i)<<endl;
+                cout<<"------------------------------------------------------------ \n";
+            }
+            cout<<"************************************************************* \n";
+            break;
+
+        case 2:
+            pop70_d(sorted);
+            cout<<"*********************************************************** \n";
+            cout <<"\nSorted by: 1970 population (Descending)"<<endl;
+            cout <<"----------------------------------------------------------\n";
+            for (int i : sorted)
+            {
+                cout <<left<<setw(35)<<this->getCountry(i)<<" : "<<getpop70(i)<<endl;
+                cout<<"------------------------------------------------------------ \n";
+            }
+            cout<<"*********************************************************** \n";
+
+            break;
+
+        case 3:
+            density_d(sorted);
+            cout<<"*********************************************************** \n";
+        	cout <<"\nSorted by: Population Density (Descending)"<<endl;
+            cout <<"-----------------------------------------------------------\n";
+            for (int i : sorted)
+            {
+                cout <<left<<setw(35)<<this->getCountry(i)<<" : "<<getdensity(i)<<endl;
+            	cout<<"------------------------------------------------------------ \n";
+			}
+            cout<<"*********************************************************** \n";
+            break;
+
+        case 4:
+            growth_rate_a(sorted);
+            cout<<"*********************************************************** \n";
+            cout <<"\nSorted by: Growth Rate (Ascending)"<<endl;
+            cout <<"-----------------------------------------------------------\n";
+            for (int i : sorted)
+            {
+                cout <<left<<setw(35)<<this->getCountry(i)<<" : "<<getgrowth_rate(i)<<endl;
+                cout<<"------------------------------------------------------------ \n";
+            }
+            cout<<"*********************************************************** \n";
+            break;
+        default:
+        	{
+        		if(choice==0)
+        		{
+        			cout<<"****** \n"
+			   			<<"END \n"
+			   			<<"****** \n";
+			   		break;
+				}
+				else
+				{
+					cout<<"**************** \n"
+						<<"Invalid choice! \n"
+						<<"****************"<< endl;
+				}
+			}
+            
+    }
+}while(choice!=0);
+}
        		
        		
  //searchEngine  		
@@ -356,7 +507,7 @@ int searchEngine::countryindex(string country)
 			}
 }  	
 
-//statEngine
+/*/statEngine
 long  double statEngine::findmean()
 {
 	long double mean;
@@ -424,7 +575,9 @@ double statEngine::findstdD(){
 	stdD=sqrt(variance);
 	return stdD;
 }
-void statEngine::densityStatistics(){
+void statEngine::densityStatistics()
+{
+	cin.ignore();
 	enum Choice{ mean=1,median,maximum,minimum,range,stdD,all
 	};
 	int input;
@@ -480,7 +633,7 @@ void statEngine::densityStatistics(){
 		break;
 	}
 }
-
+*/
 
 // analysisEngine
 void  analysisEngine::minMax()
@@ -1163,11 +1316,63 @@ void analysisEngine::analyse_pop_growth()
 		 
 		 double estimatedpop= pop23*pow((1+d_gr), 10);
 		 
-		 cout<<"*********************************************************** \n"
+		 cout<<"******************************************************************** \n"
 		 	 <<"The estimated population for "<<countryInput
 		     <<" after 10 years is "<<fixed<<setprecision(2)<<estimatedpop
-			 <<"\n**********************************************************"<<endl;
+			 <<"\n*******************************************************************"<<endl;
 	 }
+	void analysisEngine::compare()
+		{	
+			string country1, country2;
+			
+			cout<<" "<<endl;
+			cout<<"Enter Two countries to compare there data"<<endl;
+		
+	    	cout<<"Enter first country "<<endl;
+	    	cin.ignore();
+	    	getline(cin, country1);
+	   		int index1=countryindex(country1);
+	   		
+	    while(index1==-1)
+	    {
+	    	cout<<"invalid country please try again : ";
+	    	getline(cin,country1);
+	    	index1=countryindex(country1);
+		}
+		
+	    
+	    
+	    cout<<"Enter second country"<<endl;
+	    getline(cin,country2);
+	     int index2=countryindex(country2);
+	    while(index2==-1)
+	    {
+	    	cout<<"invalid country please try again \n";
+	    	getline(cin,country2);
+	    	index2=countryindex(country2);
+		}
+
+	  
+		
+		cout<<"*************************************************************************\n"
+			<<left<<setw(30)<<"Demographic feature"<<left<<setw(15)<<getCountry(index1)<<getCountry(index2)<<"\n"
+			<<"--------------------------------------------------------------------------\n"
+			<<left<<setw(30)<<"Continent"<<left<<setw(15)<<getcontinet(index1)<<getcontinet(index2)<<"\n"
+			<<left<<setw(30)<<"2023 population"<<left<<setw(15)<<getpop23(index1)<<getpop23(index2)<<"\n"
+			<<left<<setw(30)<<"2022 population"<<left<<setw(15)<<getpop22(index1)<<getpop22(index2)<<"\n"
+			<<left<<setw(30)<<"2020 population"<<left<<setw(15)<<getpop20(index1)<<getpop20(index2)<<"\n"
+			<<left<<setw(30)<<"2015 population"<<left<<setw(15)<<getpop15(index1)<<getpop15(index2)<<"\n"
+			<<left<<setw(30)<<"2010 population"<<left<<setw(15)<<getpop10(index1)<<getpop10(index2)<<"\n"
+			<<left<<setw(30)<<"2000 population"<<left<<setw(15)<<getpop00(index1)<<getpop00(index2)<<"\n"
+			<<left<<setw(30)<<"1990 population"<<left<<setw(15)<<getpop90(index1)<<getpop90(index2)<<"\n"
+			<<left<<setw(30)<<"1980 population"<<left<<setw(15)<<getpop80(index1)<<getpop80(index2)<<"\n"
+			<<left<<setw(30)<<"1970 population"<<left<<setw(15)<<getpop70(index1)<<getpop70(index2)<<"\n"
+			<<left<<setw(30)<<"Area"<<left<<setw(15)<<getarea(index1)<<getarea(index2)<<"\n"
+			<<left<<setw(30)<<"Growth Rate"<<left<<setw(15)<<getgrowth_rate(index1)<<getgrowth_rate(index2)<<"\n"  
+			<<left<<setw(30)<<"World Population Percentage"<<left<<setw(15)<<getwolrd_per(index1)<<getwolrd_per(index2)<<"\n"  
+			<<"************************************************************************* "<<endl;
+			
+}
 
 
 void populationSystem::DisplayMenu()
@@ -1237,6 +1442,14 @@ void populationSystem::DisplayMenu()
 					break;
 					
 				}
+			case 4:
+				{
+					sort.sortCountries();
+					cout<<"press enter to procced"<<endl;
+					cin.ignore();
+					cin.get();
+					break;
+				}
 			case 5:
 				{
 					analyse.minMax();
@@ -1247,12 +1460,12 @@ void populationSystem::DisplayMenu()
 					analyse.filterCountry();
 					break;
 				}
-			case 7:
-				{
-					cin.ignore();
-					stats.densityStatistics();
-					break;
-				}
+//			case 7:
+//				{
+//					cin.ignore();
+//					stats.densityStatistics();
+//					break;
+//				}
 			case 10:
 				{
 					analyse.analyse_pop_growth();
@@ -1261,8 +1474,19 @@ void populationSystem::DisplayMenu()
 			case 11:
 				{
 					analyse.estimate_pop();
+					cout<<"press enter to proceed"<<endl;
+					cin.ignore();
+					cin.get();
 					break;
 				}
+			case 12:
+			{
+				analyse.compare();
+				cout<<"press enter to proceed"<<endl; 
+				cin.ignore();
+				cin.get();
+				break;
+			}
 			case 13:
 				{
 					manage.export_high_pop_countries();
