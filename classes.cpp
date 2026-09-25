@@ -520,7 +520,7 @@ int searchEngine::countryindex(string country)
 bool statEngine::duplicate_checker(string cnt)
 {
 	int i=0;
-	while(i<continents.size())
+	while(i<continent_count)
 	{
 		if(continents[i]==cnt)
 		{
@@ -536,7 +536,7 @@ void statEngine::loadcontinents()
 	int i=1;
 	string new_cnt;
 	bool state;
-	continents[0]=getcontinet(0);
+	continents.push_back(getcontinet(0));
 	continent_count++;
 	do
 	{
@@ -545,7 +545,7 @@ void statEngine::loadcontinents()
 		
 		if(state==false)
 		{
-			continents[continent_count]=new_cnt;
+			continents.push_back(new_cnt);
 			continent_count++;	
 		}
 	
@@ -554,20 +554,17 @@ void statEngine::loadcontinents()
 }
 
 	void statEngine::group_by_continent(){
-		
 		loadcontinents();
 		
-	//string continents[6]={"Asia","Oceania","Africa","Europe","North America","South America"};
 	//create nested loop with the outer one looping through continents while the inner one looping through countries
-	for(int i=0;i<6;i++){	
+	for(int i=0;i<continent_count;i++){	
 	int count=0;
-    long int tpop=0;
+    long long int tpop=0;
 	long double avpop=0;
 	int tdens=0;
 	long double avdens=0;
 	float tGrowthRate=0;
 	float avGrowth_rate=0;
-	cout<<"here";
 	for(int j=0;j<countryCount;j++){
 		if(getcontinet(j)==continents[i])
 		{
@@ -581,19 +578,192 @@ void statEngine::loadcontinents()
 			 ss>>gr>>p;
 			 tGrowthRate+= gr;//stof() converts string into float value
 		}
-		cout<<"here";
-		avGrowth_rate=(float)tGrowthRate/count;
-		
-	cout<<endl;
-	cout<<"       ......."<<continents[i]<<"......."<<endl;
-	cout<<endl;
-	cout<<"         Number Of Countries: "<<count<<endl;
-	cout<<"         Total Population: "<<tpop<<endl;
-	cout<<"         Average Population: "<<avpop<<endl;
-	cout<<"         Average Density: "<<avdens<<endl;
-	cout<<"         Average Growth-Rate: "<<avGrowth_rate<<"%"<<endl;
+
 	}
+	avGrowth_rate=(float)tGrowthRate/count;
+	avpop=(float)tpop/count;
+	avdens=(float)tdens/count;
+		
+	cout<<"***************************************************** \n";
+	cout<<"       ........"<<continents[i]<<"........"<<endl;
+	cout<<endl;
+	cout<<left<<setw(40)<<"Number Of Countries: "<<count<<endl;
+	cout<<left<<setw(40)<<"Total Population: "<<tpop<<endl;
+	cout<<left<<setw(40)<<"Average Population: "<<fixed<<setprecision(4)<<avpop<<endl;
+	cout<<left<<setw(40)<<"Average Density: "<<avdens<<endl;
+	cout<<left<<setw(40)<<"Average Growth-Rate: "<<avGrowth_rate<<"%"<<endl;
+	cout<<left<<setw(40)<<"***************************************************** \n";
+	
 }
+}
+
+
+//###################################
+//##################################
+//#################################
+//#########
+//##########
+//###########
+//############
+//#############
+
+
+
+   
+long long int statEngine::Median()
+{
+	vector<int>sorted;
+ 	for(int i=0; i<countryCount; i++)
+	{
+ 		sorted.push_back(i);
+	}
+	 
+	sort(sorted.begin(), sorted.end(),
+        [this](int a, int b)
+        {
+            return this->getpop70(a)
+                 > this->getpop70(b);
+        });
+
+    long int  pop1;
+    long int  pop2;
+   	long long int median;
+   	
+   	if(countryCount % 2 ==0)
+	{
+   	    int index = countryCount /2;
+   	    int index2 = (countryCount/2)-1;
+
+   	    pop1=getpop70(sorted[index]);
+   	    pop2=getpop70(sorted[index2]);
+   	    median= (pop1 + pop2)/2;
+   	    	
+		return ceil(median);  
+	}
+	else
+	{
+		median= pop1;
+		return ceil(median);
+	} 		    
+}
+   	
+long int  statEngine::Minimum()
+{
+   		
+   	int i =0;
+   	long int lpop70 =getpop70(i);
+   	
+   	while(i<countryCount)
+	{
+   		long int p70= getpop70(i);
+   		if(p70< lpop70)
+		{
+   			lpop70 = p70;
+		}
+		i++;
+	}
+	return lpop70;   
+}
+	
+long int statEngine::Maximum()
+{
+   	int i =0;
+   	long int Hpop70 = getpop70(i);
+   	while(i< countryCount)
+	{
+   		long int p70= getpop70(i);
+   		if(p70> Hpop70)
+		{
+   			Hpop70 = p70;
+		}
+		i++;
+	}
+	return Hpop70;   
+}
+	   
+long double statEngine::Mean()
+{	
+	   
+	long long int sum=0;
+	int i=0;
+	
+	while (i<countryCount)
+	{
+		sum +=getpop70(i);
+		i++;
+	}
+	long double mean = sum/countryCount;
+	return mean;
+}
+	
+long double  statEngine::StandardDeviation()
+{
+	double sumDiffSquered =0;
+	long int val=0;
+	
+	for(int i =0; i< countryCount; i++)
+	{
+		val= getpop70(i);
+		sumDiffSquered += pow(val - Mean(),2);
+	}
+	long double variance = sumDiffSquered / countryCount;
+	long double stdDeviation = sqrt(variance);
+		
+	return stdDeviation;
+	}
+	 
+long int statEngine::Range()
+{
+	
+	return Maximum() -Minimum();
+		
+} 
+
+void statEngine::display_stat70()
+{
+	cout<<"************************************************************** \n";
+	cout<<right<<setw(20)<<"			1970 STATS \n";
+	cout<<"************************************************************** \n";
+	cout<<left<<setw(30)<<"	MEAN  "<<fixed<<setprecision(4)<<Mean()<<"\n";
+	cout<<"-------------------------------------------------------------- \n";
+	cout<<left<<setw(30)<<"	MEDIAN "<<Median()<<"\n";
+	cout<<"-------------------------------------------------------------- \n";
+	cout<<left<<setw(30)<<"	MINIMUM "<<Minimum()<<"\n";
+	cout<<"-------------------------------------------------------------- \n";
+	cout<<left<<setw(30)<<"	MAXIMUM "<<Maximum()<<"\n";
+	cout<<"-------------------------------------------------------------- \n";
+	cout<<left<<setw(30)<<"	RANGE "<<Range()<<"\n";
+	cout<<"-------------------------------------------------------------- \n";
+	cout<<left<<setw(30)<<"	STANDARD DEVIATION "<<StandardDeviation()<<"\n";
+	cout<<"************************************************************** \n";
+}
+
+
+void statEngine::statistics()
+{
+	int choice;
+	
+	do
+	{
+		cout<<"1. Statistics of 1970 \n"
+			<<"2. Statistics of 2015 \n"
+			<<"3. Statistics of density \n"
+			<<"0. exit \n"<<endl;
+		
+		cin>>choice;
+		
+		switch(choice)
+		{
+			case 1:
+				{
+					display_stat70();
+					cin.ignore();
+					cin.get();
+					break;
+				}
+		}		
+			
+	}while(choice!=0);
 }
 
 
@@ -1024,6 +1194,7 @@ void  analysisEngine::filterCountry()
 			case 3:
 				{
 					int count=1;
+					cout<<"*************************************************** \n";
 					while(i<countryCount)
 					{	float gr;
 						string percent;
@@ -1039,13 +1210,17 @@ void  analysisEngine::filterCountry()
 							cout<<count
 								<<". "
 								<<left<<setw(25)<<cc
-								<<"........."
-								<<gr
+								<<"  "
+								<<gr<<percent
+								<<"\n --------------------------------------------------- \n"
 								<<endl;
 							count++;
 						}
 						i++;
 					}
+					cout<<"*************************************************** \n";
+					cin.ignore();
+					cin.get();
 					break;
 				}
 			case 4:
@@ -1411,6 +1586,42 @@ void analysisEngine::analyse_pop_growth()
 		     <<" after 10 years is "<<fixed<<setprecision(2)<<estimatedpop
 			 <<"\n*******************************************************************"<<endl;
 	 }
+	 
+void analysisEngine::classifyDensity(){
+
+int low=0;
+int medium=0;
+int high=0;
+int density;
+for(int i=0;i<countryCount;i++)
+{
+	density=getdensity(i);
+	
+	if(density<100)
+	{
+		low++;
+	}
+	else if(density>=100&&density<=499)
+	{
+		medium++;
+	}
+	else
+	{
+		high++;
+	}
+
+	
+}
+cout<<"************************************* \n";
+cout<<left<<setw(20)<<"Low Density"<<"("<<low<<" Countries)"<<endl;
+cout<<"------------------------------------- \n";
+cout<<left<<setw(20)<<"Medium Density"<<"("<<medium<<" Countries)"<<endl;
+cout<<"------------------------------------- \n";
+cout<<left<<setw(20)<<"High Density"<<"("<<high<<" Countries)"<<endl;
+cout<<"************************************* \n";
+}
+	 
+	 
 	void analysisEngine::compare()
 		{	
 			string country1, country2;
@@ -1477,9 +1688,22 @@ void populationSystem::DisplayMenu()
 		  
 		    cout<<"\n press enter to load Data \n";
 		    cin.get();
+		    
+		    int steps=10;
+			cout<<"Loading[";
+			for(int i=0;i<steps;i++)
+			{
+		
+				cout<<".."<<flush;
+				sleep(10/steps);
+			}
+			cout<<"] \n" ;
+			system("cls");
 		    manage.loadData();	
 			cout<<"\n press enter to proceed \n";
-			cin.get();		
+			cin.get();	
+			
+			system("cls");	
 			
 			do{
 			cout<<"=======================================================================================\n"
@@ -1509,51 +1733,73 @@ void populationSystem::DisplayMenu()
 		{
 			case 1:
 				{
+					system("cls");
 					manage.loadData();
 					cout<<"press enter to proceed \n";
 					cin.ignore();
 					cin.get();
+					system("cls");
 					break;
 				}
 			case 2:
 				{
+					system("cls");
 					manage.Number_of_countries();
 					cout<<"press enter to proceed \n";
 					cin.ignore();
 					cin.get();
+					system("cls");
 					break;
 				}
 			case 3:
 				{
+					system("cls");
 					search.search();
 					cout<<"\n press enter to proceed \n";
 					cin.ignore();
 					cin.get();
+					system("cls");
 					break;
 					
 				}
 			case 4:
 				{
+					system("cls");
 					sort.sortCountries();
 					cout<<"press enter to procced"<<endl;
 					cin.ignore();
 					cin.get();
+					system("cls");
 					break;
 				}
 			case 5:
 				{
+					system("cls");
 					analyse.minMax();
 					cout<<"press enter to procced"<<endl;
 					cin.ignore();
 					cin.get();
+					system("cls");
 					break;
 				}
 			case 6:
 				{
+					system("cls");
 					analyse.filterCountry();
 					cout<<"press enter to procced"<<endl;
 					cin.ignore();
 					cin.get();
+					system("cls");
+					break;
+				}
+			case 7:
+				{
+					system("cls");
+					stats.statistics();
+					cout<<"press enter to procced"<<endl;
+					cin.ignore();
+					cin.get();
+					system("cls");
 					break;
 				}
 //			case 7:
@@ -1563,52 +1809,76 @@ void populationSystem::DisplayMenu()
 
 //					break;
 //				}
-			case 9:
+			case 8:
 				{
-					stats.group_by_continent();
+					system("cls");
+					analyse.classifyDensity();
+					cout<<"press enter to procced"<<endl;
 					cin.ignore();
 					cin.get();
+					system("cls");
+					break;
+				}
+			case 9:
+				{
+					//system("cls");
+					stats.group_by_continent();
+					cout<<"press enter to procced"<<endl;
+					cin.ignore();
+					cin.get();
+				//	system("cls");
 					break;
 				}
 			case 10:
 				{
+					system("cls");
 					analyse.analyse_pop_growth();
 					cout<<"press enter to procced"<<endl;
 					cin.ignore();
 					cin.get();
+					system("cls");
 					break;
 				}
 			case 11:
 				{
+					system("cls");
 					analyse.estimate_pop();
 					cout<<"press enter to proceed"<<endl;
 					cin.ignore();
 					cin.get();
+					system("cls");
 					break;
 				}
 			case 12:
 			{
+				system("cls");
 				analyse.compare();
 				cout<<"press enter to proceed"<<endl; 
 				cin.ignore();
 				cin.get();
+				system("cls");
 				break;
 			}
 			case 13:
 				{
+					system("cls");
 					manage.export_high_pop_countries();
 					cout<<"press enter to procced"<<endl;
 					cin.ignore();
 					cin.get();
+					system("cls");
 					break;
 				}
 			default:
 				{
+					system("cls");
 					if(choice==0)
 					{
+					
 						cout<<"******** \n"
 							<<"END \n"
 							<<"******** "<<endl;
+						system("cls");
 						break;
 					}
 					else
@@ -1616,6 +1886,7 @@ void populationSystem::DisplayMenu()
 						cout<<"************** \n"
 							<<"IVALID INPUT \n"
 							<<"**************"<<endl;
+						system("cls");
 						break;
 					}
 					
