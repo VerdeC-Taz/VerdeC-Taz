@@ -12,5 +12,5 @@ RUN g++ -std=c++17 *.cpp -o program
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "ttyd -p ${PORT:-10000} -w ./program"]
+CMD ["sh", "-c", "exec ttyd --port \"${PORT:-10000}\" --writable /app/program"]
 
