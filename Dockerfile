@@ -8,7 +8,10 @@ WORKDIR /app
 
 COPY . .
 
-RUN g++ -std=c++17 *.cpp -o program
+RUN g++ -std=c++17 classes.cpp main.cpp -o program
 
-CMD ["ttyd", "-w", "./program"]
+EXPOSE 10000
+
+CMD ["sh", "-c", "ttyd -p ${PORT:-10000} -w ./program"]
+
 
