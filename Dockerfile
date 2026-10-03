@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN g++ -std=c++17 classes.cpp main.cpp -o program
+RUN g++ -std=c++17 *.cpp -o program
 
 EXPOSE 10000
 
